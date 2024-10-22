@@ -1,0 +1,57 @@
+body {
+    background-color: #ffffff; /* Color de fondo negro */
+    color: #030303; /* Color de texto claro */
+}
+.sidebar {
+    height: 100vh;
+    background-color: #1e1e1e; /* Fondo de la barra lateral */
+    color: #fff;
+    padding: 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transition: width 0.3s;
+    overflow: hidden;
+    width: 250px;
+}
+.sidebar.collapsed {
+    width: 70px;
+}
+.sidebar .nav-link {
+    color: #ccc;
+}
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background-color: #333; /* Color de fondo al pasar el mouse */
+    color: #fff;
+}
+.sidebar i {
+    margin-right: 10px;
+}
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+.collapsed + .content {
+    margin-left: 70px;
+}
+.navbar {
+    background-color: #1e1e1e; /* Fondo de la barra de navegación */
+    color: #fff;
+}
+.toggle-sidebar-btn {
+    cursor: pointer;
+    color: #fff; /* Color del texto del botón */
+}
+.card {
+    background-color: #f3f0f0; /* Fondo de la tarjeta */
+    border: none; /* Sin borde */
+}
+.card-header {
+    background-color: #ffffff; /* Fondo del encabezado de la tarjeta */
+    color: #050505; /* Color del texto del encabezado */
+}
+.card-body {
+    color: #e0e0e0; /* Color del texto del cuerpo de la tarjeta */
+}

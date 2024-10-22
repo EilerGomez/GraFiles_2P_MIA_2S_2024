@@ -1,0 +1,64 @@
+
+<body>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mx-auto">Gestión de Archivos</span>
+            <button class="toggle-sidebar-btn btn btn-outline-light" type="button" (click)="logOut()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+    
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Barra lateral -->
+            <nav class="col-md-2 sidebar" id="sidebarMenu">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#home" data-toggle="collapse">
+                                <i class="fas fa-home"></i> <span>Home</span>
+                            </a>
+                            <div id="home" class="collapse show">
+                                <ul class="nav flex-column ml-3">
+                                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-folder"></i> Raíz</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-share-alt"></i> Compartida</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#usuarios" data-toggle="collapse">
+                                <i class="fas fa-users"></i> <span>Usuarios</span>
+                            </a>
+                            <div id="usuarios" class="collapse">
+                                <ul class="nav flex-column ml-3">
+                                    <li class="nav-item"><a class="nav-link" routerLink="nuevoUsuario"><i class="fas fa-user-plus"></i> Agregar</a></li>
+                                    <li class="nav-item"><a class="nav-link" routerLink="usuarios"><i class="fas fa-user-friends"></i> Todos</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#yo" data-toggle="collapse">
+                                <i class="fas fa-user"></i> <span>Yo</span>
+                            </a>
+                            <div id="yo" class="collapse">
+                                <ul class="nav flex-column ml-3">
+                                    <li class="nav-item"><a class="nav-link" routerLink="cambioPassword"><i class="fas fa-key"></i> Contraseña</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Contenido principal -->
+            <div class="col-md-9 ml-sm-auto col-lg-10 content">
+                
+                <router-outlet></router-outlet>
+                
+            </div>
+        </div>
+    </div>  
+</body>

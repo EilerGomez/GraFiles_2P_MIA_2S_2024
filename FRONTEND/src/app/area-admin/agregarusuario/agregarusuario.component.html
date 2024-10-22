@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card my-4 bg-dark text-white"> <!-- Fondo oscuro y texto blanco -->
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-lg-5">
+                    <h3 class="mt-2 me-4">Nuevo Usuario</h3>
+                </nav>
+
+                <div class="card-body">
+                    <form (ngSubmit)="crearNuevoUsuario(nuevoUserForm)" #nuevoUserForm="ngForm">
+                        
+                        <div class="form-group">
+                            <label for="name">*Nombre de usuario:</label>
+                            <input type="text" class="form-control bg-dark text-white" name="name" #nombreN="ngModel" [(ngModel)]="newUser.nombre" required> <!-- Campo oscuro -->
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="name">*Username del usuario:</label>
+                            <input type="text" class="form-control bg-dark text-white" name="name" #nombreN="ngModel" [(ngModel)]="newUser.username" required> <!-- Campo oscuro -->
+                        </div>
+                        <br>
+                        
+                        <div class="form-group">
+                            <label for="rol">*Rol del usuario:</label>
+                            <select class="form-select bg-dark text-white" aria-label="Default select example" id="combo" #comboc="ngModel" [(ngModel)]="newUser.rol" name="rol" required>
+                                <option [ngValue]="1">Administrador</option>
+                                <option [ngValue]="2">Empleado</option>
+                            </select>
+                        </div>
+                        
+                        <br>
+                        
+                        <div class="form-group">
+                            <label for="pass1">*Contraseña:</label>
+                            <input type="password" class="form-control bg-dark text-white" name="pass1" #pass1="ngModel" [(ngModel)]="newUser.password" required> <!-- Campo oscuro -->
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="pass2">*Confirmar Contraseña:</label>
+                            <input type="password" class="form-control bg-dark text-white" name="pass2" #pass2="ngModel" [(ngModel)]="confirmPassword" required> <!-- Campo oscuro -->
+                        </div>
+                        <br>                        
+                        <div class="text-center">
+                            <!-- Asegúrate de comparar los valores de los campos, no las referencias -->
+                            <button type="submit" class="btn btn-success w-75 mt-2 me-10"
+                                [disabled]="!nuevoUserForm.form.valid || newUser.password !== confirmPassword"> <i class="bi bi-save"></i> Guardar</button>
+                        </div>
+                        <!-- Mostrar un mensaje de error si las contraseñas no coinciden -->
+                        <div *ngIf="newUser.password !== confirmPassword" class="alert alert-danger mt-2">
+                            Las contraseñas no coinciden.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
