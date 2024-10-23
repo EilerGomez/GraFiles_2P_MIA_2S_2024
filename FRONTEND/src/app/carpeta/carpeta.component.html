@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
 
 <!-- Botón para agregar carpeta o archivo -->
@@ -43,11 +44,37 @@
 
 <!-- Muestra las carpetas -->
 <div class="d-flex flex-wrap">
-  <div *ngFor="let folder of carpetas" class="text-center mx-3 my-2">
+  <div *ngFor="let folder of carpetas; let i = index" class="text-center mx-3 my-2 position-relative">
     <button class="btn btn-link position-relative" (click)="navegarACarpeta(folder)">
       <i class="bi bi-folder-fill" style="font-size: 4rem; color: #ff851be7;"></i>
       <i class="bi bi-file-text-fill position-absolute" style="font-size: 2rem; top: 10px; left: 15px; color: white;"></i>
     </button>
     <div>{{ folder.nombre }}</div> <!-- Nombre de la carpeta debajo del ícono -->
+
+    <!-- Botón de más opciones -->
+     <div class="menutrespuntos">
+      <button class="btn btn-link position-absolute" (click)="mostrarMenu(folder, $event)" style="top: 5px; right: 5px;">
+        <i class="bi bi-three-dots"></i> <!-- Icono de tres puntos -->
+      </button>
+     </div>
+
+
   </div> 
 </div>
+
+<!-- Menú contextual -->
+<div *ngIf="mostrarmenu" class="menu-contextual" [ngStyle]="{'top': menuTop + 'px', 'left': menuLeft + 'px'}">
+  <button class="btn btn-sm btn-secondary d-block my-1" (click)="cambiarNombre()">
+    <i class="bi bi-pencil"></i> Renombrar
+  </button>
+  <button class="btn btn-sm btn-danger d-block my-1" (click)="eliminarCarpeta()">
+    <i class="bi bi-trash"></i> Eliminar
+  </button>
+  <button class="btn btn-sm btn-info d-block my-1" (click)="copiarCarpeta()">
+    <i class="bi bi-files"></i> Copiar
+  </button>
+</div>
+
+<!-- Estilos CSS dentro del HTML -->
+
+

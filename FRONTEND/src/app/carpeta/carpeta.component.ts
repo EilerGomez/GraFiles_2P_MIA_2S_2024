@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Carpeta } from '../Modelo/Carpeta';
 import { CarpetasService } from '../Service/carpetas.service';
 import { Usuario } from '../Modelo/Usuario';
@@ -51,6 +51,7 @@ export class CarpetaComponent {
 
 
   navegarACarpeta(folder: Carpeta) {
+    this.mostrarmenu=false
     this.breadcrumb.push({ id: folder._id, nombre: folder.nombre });
     // Aquí deberías cargar las subcarpetas de la carpeta seleccionada
     console.log('navegando a carpeta con id: ' + folder._id)
@@ -59,6 +60,7 @@ export class CarpetaComponent {
   }
 
   navigateTo(id: string) {
+    this.mostrarmenu=false
     if(id==='0'){
       this.traerCarpetaRaiz();
       this.breadcrumb = this.breadcrumb.slice(0,  0);
@@ -125,4 +127,47 @@ export class CarpetaComponent {
   agregarArchivo(){
 
   }
+
+
+   // Método para mostrar el menú
+  menuTop: number = 0;
+  menuLeft: number = 0;
+  mostrarmenu:boolean=false;
+
+
+
+  // Métodos para las acciones del menú
+  cambiarNombre() {
+  }
+
+  eliminarCarpeta() {
+  }
+
+  copiarCarpeta() {
+   
+  }
+
+  mostrarMenu(carpeta: Carpeta, event: MouseEvent) {
+    console.log(carpeta)
+    event.preventDefault(); // Prevenir acción predeterminada del botón
+    event.stopPropagation(); // Detener la propagación del evento
+    this.menuTop = event.clientY-45; // Posición vertical
+    this.menuLeft = event.clientX - 210; // Posición horizontal
+    this.mostrarmenu = true; // Muestra el menú
+  }
+
+  @HostListener('document:click', ['$event'])
+  cerrarMenu(event: MouseEvent) {
+    const targetElement = event.target as HTMLElement;
+
+    const clickedInsideMenu = targetElement.closest('.menu-contextual') !== null;
+
+    if (!clickedInsideMenu) {
+      this.mostrarmenu = false; // Oculta el menú
+    }
+  }
+
+  
+
+  
 }
