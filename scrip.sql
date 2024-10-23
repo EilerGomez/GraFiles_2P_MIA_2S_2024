@@ -16,3 +16,7 @@ db.createCollection("archivos");
 //password = admin
 //username = admin1*/
 db.usuarios.insertOne({username:'admin1', nombre:'Usuario administrador 1', password:'21232f297a57a5a743894a0e4a801fc3',rol:1});
+
+-- insertar las dos carpetas la raiz y la compartida
+db.ficheros.insertOne({nombre: 'compartida', fechamod: new Date(),id_usuario:'0', idUnic:1});
+b.ficheros.insertOne({nombre: 'raiz', fechamod: new Date(),id_usuario:'0', idUnic:0});

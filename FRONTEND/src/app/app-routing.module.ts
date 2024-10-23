@@ -6,6 +6,7 @@ import { AreaAdminComponent } from './area-admin/area-admin.component';
 import { UsuariosComponent } from './area-admin/usuarios/usuarios.component';
 import { AgregarusuarioComponent } from './area-admin/agregarusuario/agregarusuario.component';
 import { CambioPasswordComponent } from './cambio-password/cambio-password.component';
+import { CarpetaComponent } from './carpeta/carpeta.component';
 
 const routes: Routes = [
 
@@ -16,7 +17,8 @@ const routes: Routes = [
     children:[{
       path:'usuarios',component:UsuariosComponent},
       {path:'nuevoUsuario', component:AgregarusuarioComponent},
-      {path:'cambioPassword',component:CambioPasswordComponent}
+      {path:'cambioPassword',component:CambioPasswordComponent},
+      {path:'carpetas', component:CarpetaComponent}
     ]
   }
 ];

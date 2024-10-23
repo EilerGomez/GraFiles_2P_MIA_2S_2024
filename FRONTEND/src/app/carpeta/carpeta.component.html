@@ -1,0 +1,53 @@
+
+
+<!-- Botón para agregar carpeta o archivo -->
+<div class="d-flex align-items-center my-3">
+  <button class="btn btn-success" (click)="toggleForm()">
+    <i class="bi bi-plus-circle"></i> Nuevo
+  </button>
+  <div *ngIf="showForm" class="ms-3">
+    <button class="btn btn-info me-2" (click)="setFormType('carpeta')">
+      <i class="bi bi-folder-plus"></i> Carpeta
+    </button>
+    <button class="btn btn-info" (click)="setFormType('archivo')">
+      <i class="bi bi-file-earmark-plus"></i> Archivo
+    </button>
+  </div>
+</div>
+
+
+<!-- Formulario para agregar carpeta -->
+<div *ngIf="formType === 'carpeta'">
+  <input type="text" [(ngModel)]="nuevoNombre" class="form-control my-2" placeholder="Nombre de la nueva carpeta" />
+  <button class="btn btn-primary" (click)="agregarCarpeta()">Guardar Carpeta</button>
+</div>
+
+<!-- Formulario para agregar archivo -->
+<div *ngIf="formType === 'archivo'">
+  <input type="text" [(ngModel)]="nuevoArchivoNombre" class="form-control my-2" placeholder="Nombre del archivo" />
+  <select [(ngModel)]="nuevaExtension" class="form-control my-2">
+    <option value="" disabled selected>Seleccione la extensión</option>
+    <option value=".txt">.txt</option>
+    <option value=".html">.html</option>
+    <option value=".png">.png</option>
+    <option value=".jpg">.jpg</option>
+  </select>
+  <textarea [(ngModel)]="nuevoContenido" class="form-control my-2" placeholder="Contenido del archivo"></textarea>
+  <button class="btn btn-primary" (click)="agregarArchivo()">Guardar Archivo</button>
+</div>
+
+<app-breadcrumb 
+  [breadcrumb]="breadcrumb" 
+  (navigate)="navigateTo($event)">
+</app-breadcrumb>
+
+<!-- Muestra las carpetas -->
+<div class="d-flex flex-wrap">
+  <div *ngFor="let folder of carpetas" class="text-center mx-3 my-2">
+    <button class="btn btn-link position-relative" (click)="navegarACarpeta(folder)">
+      <i class="bi bi-folder-fill" style="font-size: 4rem; color: #ff851be7;"></i>
+      <i class="bi bi-file-text-fill position-absolute" style="font-size: 2rem; top: 10px; left: 15px; color: white;"></i>
+    </button>
+    <div>{{ folder.nombre }}</div> <!-- Nombre de la carpeta debajo del ícono -->
+  </div> 
+</div>

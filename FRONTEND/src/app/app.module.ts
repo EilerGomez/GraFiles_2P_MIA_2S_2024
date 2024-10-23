@@ -14,6 +14,9 @@ import { UsuariosComponent } from './area-admin/usuarios/usuarios.component'
 import { UsuariosService } from './Service/usuarios.service';
 import { AgregarusuarioComponent } from './area-admin/agregarusuario/agregarusuario.component';
 import { CambioPasswordComponent } from './cambio-password/cambio-password.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { CarpetaComponent } from './carpeta/carpeta.component';
+import { CarpetasService } from './Service/carpetas.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +26,9 @@ import { CambioPasswordComponent } from './cambio-password/cambio-password.compo
     AreaAdminComponent,
     UsuariosComponent,
     AgregarusuarioComponent,
-    CambioPasswordComponent    
+    CambioPasswordComponent,
+    BreadcrumbComponent,
+    CarpetaComponent    
   ],
   imports: [
     BrowserModule,
@@ -31,7 +36,7 @@ import { CambioPasswordComponent } from './cambio-password/cambio-password.compo
     FormsModule,
     HttpClientModule
   ],
-  providers: [ LoginService, UsuariosService],
+  providers: [ LoginService, UsuariosService, CarpetasService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -3,7 +3,7 @@ const cors = require('cors');
 const { client, connect, close } = require('./connection'); // Importa el cliente y las funciones
 const crypto = require('crypto');
 const usuariosRouter = require('./usuarios');
-
+const carpetasRouter = require('./carpetas');
 const app = express();
 const port = 3010;
 
@@ -12,7 +12,7 @@ app.use(express.json());
 
 
 app.use('/usuarios', usuariosRouter(client)); 
-
+app.use('/carpetas',carpetasRouter(client));
 // Ruta para autenticar usuario
 app.post('/connect', async (req, res) => {
   connect();
