@@ -21,9 +21,13 @@ export class CarpetasService {
     const body = { nombre, idU, ficheroMadre };
     return this.http.post(`${this.Url}`, (body));
   }
+  putNombreCarpeta(idC:string, nombre:string, ficheroMadre:string) {
+    return this.http.put<any>(`${this.Url}/nombre-actualizar/${idC}`, {nombre,ficheroMadre});
+  }
 
-
-
+  deleteCarpeta(idC:string) {
+    return this.http.delete(`${this.Url}/${idC}`);
+  }
  /* putUsuario(usuario: Usuario) {
     return this.http.put<Usuario>(`${this.Url}/${usuario._id}`, usuario);
   }
