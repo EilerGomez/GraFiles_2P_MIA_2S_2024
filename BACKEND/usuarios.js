@@ -17,6 +17,10 @@ function usuariosRouter(client) {
         const passwordEncriptada = crypto.createHash('md5').update(password).digest('hex');
 
         try {
+            const usuarioAnt = await collection.findOne({ username: username });
+            if (usuarioAnt) {
+                return res.status(400).send("No se permiten usuarios con el mismo username");
+            }
             const result = await collection.insertOne({ username, nombre, password:passwordEncriptada, rol });
             const nuevoUsuario = await collection.findOne({ _id: result.insertedId });
             res.status(201).json(nuevoUsuario);

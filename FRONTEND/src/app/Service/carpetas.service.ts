@@ -28,6 +28,14 @@ export class CarpetasService {
   deleteCarpeta(idC:string) {
     return this.http.delete(`${this.Url}/${idC}`);
   }
+
+  postCopiarCarpeta(nombre: string, idU: string, ficheroMadre: string, idFM:string) {
+    const body = { nombre, idU, ficheroMadre };
+    return this.http.post(`${this.Url}/copiar-carpeta/${idFM}`, (body));
+  }
+  putMoverCarpeta(idC:string, nombre:string, nuevoFicheroMadre:string) {
+    return this.http.put<any>(`${this.Url}/mover_carpeta/${idC}`, {nombre,nuevoFicheroMadre});
+  }
  /* putUsuario(usuario: Usuario) {
     return this.http.put<Usuario>(`${this.Url}/${usuario._id}`, usuario);
   }

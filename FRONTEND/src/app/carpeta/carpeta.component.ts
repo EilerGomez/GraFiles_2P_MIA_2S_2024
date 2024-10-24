@@ -20,7 +20,7 @@ export class CarpetaComponent {
   nuevoContenido: string = ''; // Variable para el contenido del archivo
   showForm: boolean = false; // Controla la visibilidad del formulario
   carpetaEdit: Carpeta = new Carpeta();
-  carpetaAuxiliar: Carpeta = new Carpeta();
+  isCarpeta!: boolean // si es true es carpeta si es false es archivo
 
   formType: 'carpeta' | 'archivo' | null = null; // Tipo de formulario a mostrar
   constructor(private servicioCarpetas: CarpetasService) { }
@@ -174,15 +174,20 @@ export class CarpetaComponent {
   }
   permisoMover_Copiar: boolean = false
   copiarCarpeta() {
+    this.isCarpeta=true
     this.permisoMover_Copiar = true
     this.mostrarmenu = false
     console.log('Carpeta copiada:', this.carpetaEdit);
   }
   moverCarpeta() {
-
+    this.servicioCarpetas.putMoverCarpeta(this.carpetaEdit._id,this.carpetaEdit.nombre,this.idCarpetaActual).subscribe(data=>{
+      this.traerCarpetasDeUnaCarpeta(this.idCarpetaActual)
+    }, error=>{console.log(error)})
   }
-  pegarCarpeta(){
-    
+  pegarCarpeta() {
+    this.servicioCarpetas.postCopiarCarpeta(this.carpetaEdit.nombre,this.carpetaEdit.id_usuario,this.carpetaEdit._id, this.idCarpetaActual).subscribe(data=>{
+      this.traerCarpetasDeUnaCarpeta(this.idCarpetaActual);
+    }, error=>{console.log(error)})
   }
 
   mostrarMenu(carpeta: Carpeta, event: MouseEvent) {
@@ -207,20 +212,24 @@ export class CarpetaComponent {
   }
 
   @HostListener('contextmenu', ['$event'])
-  onRightClick(event: MouseEvent, folder: (Carpeta | null)) {
+  onRightClick(event: MouseEvent, folder: (Carpeta | null), isfolder: number) { // 0 no es nada, 1 es carpeta 2 es archivo
+    this.isCarpeta = isfolder == 1 ? true : false;
     event.preventDefault(); // Previene el menú de contexto por defecto del navegador
     event.stopPropagation(); // Detener la propagación del evento
 
-    if (folder) {
-      this.carpetaEdit = folder; // Asigna la carpeta editada
-      this.menuTop = event.clientY - 45; // Ajusta la posición vertical
-      this.menuLeft = event.clientX - 210; // Ajusta la posición horizontal
-      this.mostrarmenu = true; // Muestra el menú contextual de la carpeta
-      this.mostrarmenu2=false
+    if (isfolder === 1) {
+      if (folder) {
+        this.carpetaEdit = folder; // Asigna la carpeta editada
+        this.menuTop = event.clientY - 45; // Ajusta la posición vertical
+        this.menuLeft = event.clientX - 210; // Ajusta la posición horizontal
+        this.mostrarmenu = true; // Muestra el menú contextual de la carpeta
+        this.mostrarmenu2 = false
+      }
+
     } else {
       this.menuTop = event.clientY - 45; // Ajusta la posición vertical
       this.menuLeft = event.clientX - 210;
-      this.mostrarmenu=false;
+      this.mostrarmenu = false;
       this.mostrarmenu2 = true; // Muestra el segundo menú contextual si no hay carpeta
     }
   }

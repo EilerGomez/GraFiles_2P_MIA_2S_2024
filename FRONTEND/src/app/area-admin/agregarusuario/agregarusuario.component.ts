@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { data } from 'jquery';
+import { data, error } from 'jquery';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { UsuariosService } from 'src/app/Service/usuarios.service';
 
@@ -20,6 +20,9 @@ export class AgregarusuarioComponent {
       alert("Se ha guardado el nuevo usuario");
       formNewuser.resetForm();
       this.newUser= new Usuario();
+    }, error=>{
+      console.log(error)
+      alert("Error, el username: " + this.newUser.username + " ya existe en el sistema.")
     })
   }
 }
