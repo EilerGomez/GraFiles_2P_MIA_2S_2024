@@ -43,11 +43,14 @@ function carpetasRouter(client) {
         let contador = 1;
         let carpetaAnt = await collection.findOne({ nombre: nuevoNombre, id_fichero_madre: idCarpetaDestino, eliminada: false });
 
+
         while (carpetaAnt) {
             nuevoNombre = `${carpetaOrigen.nombre}_${contador}`;
             contador++;
             carpetaAnt = await collection.findOne({ nombre: nuevoNombre, id_fichero_madre: idCarpetaDestino, eliminada: false });
         }
+
+
 
         // Insertar la nueva carpeta en el destino
         const nuevaCarpetaResult = await collection.insertOne({
@@ -62,12 +65,13 @@ function carpetasRouter(client) {
 
         // Copiar los archivos de la carpeta origen a la nueva carpeta
         const archivos = await collectionArchivos.find({ id_fichero_madre: idCarpetaOrigen, eliminado: false }).toArray();
-        const nuevasCopiasArchivos = archivos.map(archivo => ({
+        const nuevasCopiasArchivos = archivos.map(archivo => ({ // aqui aun falta logica para los archivos, no es la informacion de archivos oficial
             nombre: archivo.nombre,
-            fechamod: new Date(),
+            extension: archivo.extension,
+            contenido: archivo.contenido,
             eliminado: archivo.eliminado,
-            id_fichero_madre: nuevaCarpeta,
-            id_usuario: idU
+            fechamod: new Date(),
+            id_fichero_madre: nuevaCarpeta
         }));
 
         if (nuevasCopiasArchivos.length > 0) {
@@ -182,12 +186,15 @@ function carpetasRouter(client) {
             let nuevoNombre = nombre;
             let contador = 1;
             let carpetaAnt = await collection.findOne({ nombre: nuevoNombre, id_fichero_madre: nuevoFicheroMadre, eliminada: false });
-
-            while (carpetaAnt) {
-                nuevoNombre = `${nombre}_${contador}`;
-                contador++;
-                carpetaAnt = await collection.findOne({ nombre: nuevoNombre, id_fichero_madre: nuevoFicheroMadre, eliminada: false });
+            const carpOriginal = await collection.findOne({_id: new ObjectId(id) });
+            if(carpOriginal.id_fichero_madre!==nuevoFicheroMadre){
+                while (carpetaAnt) {
+                    nuevoNombre = `${nombre}_${contador}`;
+                    contador++;
+                    carpetaAnt = await collection.findOne({ nombre: nuevoNombre, id_fichero_madre: nuevoFicheroMadre, eliminada: false });
+                }
             }
+            
 
             // Actualizar el fichero madre y el nombre de la carpeta
             const result = await collection.updateOne(

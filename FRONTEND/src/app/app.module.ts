@@ -17,6 +17,7 @@ import { CambioPasswordComponent } from './cambio-password/cambio-password.compo
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { CarpetaComponent } from './carpeta/carpeta.component';
 import { CarpetasService } from './Service/carpetas.service';
+import { ArchivosService } from './Service/archivos.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +37,7 @@ import { CarpetasService } from './Service/carpetas.service';
     FormsModule,
     HttpClientModule
   ],
-  providers: [ LoginService, UsuariosService, CarpetasService],
+  providers: [ LoginService, UsuariosService, CarpetasService, ArchivosService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

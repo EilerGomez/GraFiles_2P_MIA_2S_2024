@@ -4,6 +4,7 @@ const { client, connect, close } = require('./connection'); // Importa el client
 const crypto = require('crypto');
 const usuariosRouter = require('./usuarios');
 const carpetasRouter = require('./carpetas');
+const archivosRouter = require('./archivos');
 const app = express();
 const port = 3010;
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/usuarios', usuariosRouter(client)); 
 app.use('/carpetas',carpetasRouter(client));
+app.use('/archivos',archivosRouter(client));
 // Ruta para autenticar usuario
 app.post('/connect', async (req, res) => {
   connect();

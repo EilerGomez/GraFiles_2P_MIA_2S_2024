@@ -31,7 +31,13 @@
     <option value=".png">.png</option>
     <option value=".jpg">.jpg</option>
   </select>
-  <textarea [(ngModel)]="nuevoContenido" class="form-control my-2" placeholder="Contenido del archivo"></textarea>
+  <textarea *ngIf="nuevaExtension==='.txt' || nuevaExtension==='.html'" [(ngModel)]="nuevoContenido"
+    class="form-control my-2" placeholder="Contenido del archivo"></textarea>
+  <div *ngIf="nuevaExtension === '.png' || nuevaExtension === '.jpg'">
+    <h2>Subir Archivo</h2>
+    <input type="file" (change)="onFileSelected($event)" [accept]="nuevaExtension" />
+    <br><br>
+  </div>
   <button class="btn btn-primary" (click)="agregarArchivo()">Guardar Archivo</button>
 </div>
 
@@ -53,21 +59,49 @@
       </button>
       <div>{{ folder.nombre }}</div> <!-- Nombre de la carpeta debajo del ícono -->
     </div>
+    <div *ngFor="let archivo of archivos; let j = index" class="text-center mx-3 my-2 position-relative"
+      (contextmenu)="onRightClick($event, archivo,2)">
+      <button class="btn btn-link position-relative" (click)="mostrarArchivo(archivo)">
+        <i [ngClass]="getFileIconClass(archivo.extension)" style="font-size: 4rem; color: #007bff;"></i>
+      </button>
+      <div>{{ archivo.nombre }}{{ archivo.extension }}</div>
+    </div>
   </div>
 </div>
+<!-- Muestra los archivos 
+<div class="area-principal" (contextmenu)="onRightClick($event, null, 0)">
+  <div class="d-flex flex-wrap">
+    <div *ngFor="let archivo of archivos; let j = index" class="text-center mx-3 my-2">
+      <button class="btn btn-link">
+        <i [ngClass]="getFileIconClass(archivo.extension)" style="font-size: 3rem; color: #007bff;"></i>
+      </button>
+      <div>{{ archivo.nombre }}{{ archivo.extension }}</div>
+    </div>
+  </div>
+</div>-->
 
 <!-- Menú contextual -->
 <div *ngIf="mostrarmenu" class="menu-contextual" [ngStyle]="{'top': menuTop + 'px', 'left': menuLeft + 'px'}">
-  <button class="btn btn-sm btn-secondary d-block my-1" (click)="abrirModal()">
+  <button *ngIf="!isCarpeta" class="btn btn-sm btn-secondary d-block my-1" (click)="abrirModal()">
+    <i class="bi bi-pencil"></i> Editar
+  </button>
+  <button *ngIf="isCarpeta" class="btn btn-sm btn-secondary d-block my-1" (click)="abrirModal()">
     <i class="bi bi-pencil"></i> Renombrar
   </button>
   <button class="btn btn-sm btn-danger d-block my-1" (click)="eliminarCarpeta()">
-    <i class="bi bi-trash"></i> Eliminar
+    <i class="bi bi-trash"></i> Mover a la papelera
   </button>
   <button class="btn btn-sm btn-info d-block my-1" (click)="copiarCarpeta()">
     <i class="bi bi-files"></i> Copiar
   </button>
+  <button class="btn btn-sm btn-primary d-block my-1" (click)="verPropiedades()">
+    <i class="bi bi-info-circle"></i> Propiedades
+  </button>
+  <button *ngIf="!isCarpeta" class="btn btn-sm btn-success d-block my-1" (click)="compartirArchivo()">
+    <i class="bi bi-share"></i> Compartir archivo
+  </button>
 </div>
+
 
 <!-- Menú contextual 2 -->
 <div *ngIf="mostrarmenu2" class="menu-contextual" [ngStyle]="{'top': menuTop + 'px', 'left': menuLeft + 'px'}">
@@ -96,6 +130,50 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="actualizarNombre()">Actualizar Nombre</button>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal para mostrar la imagen -->
+<div *ngIf="selectedImage" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cerrarModal()">&times;</span>
+    <img [src]="selectedImage" alt="Imagen" />
+  </div>
+</div>
+
+<div *ngIf="modalArchivos" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cerrarModal()">&times;</span>
+    <div *ngIf="selectedExtension === '.txt'">
+      <h2>Contenido del Archivo TXT</h2>
+      <pre>{{ modalArchivos }}</pre>
+    </div>
+    <div *ngIf="selectedExtension === '.html'">
+      <h2>Contenido del Archivo HTML</h2>
+      <div [innerHTML]="modalArchivos"></div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="modalDetalles" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cerrarModal()">&times;</span>
+
+    <div *ngIf="isCarpeta">
+      <h2>Detalles de la Carpeta</h2>
+      <p><strong>Nombre:</strong> {{ carpetaEdit.nombre }}</p>
+      <p><strong>Fecha de Modificación:</strong> {{ carpetaEdit.fechamod | date:'short' }}</p>
+      <p><strong>Usuario que la creó:</strong> {{ getNameUser() }}</p>
+    </div>
+
+    <div *ngIf="!isCarpeta">
+      <h2>Detalles del Archivo</h2>
+      <p><strong>Nombre:</strong> {{ objetoCopiado.nombre }}</p>
+      <p><strong>Extensión:</strong> {{ objetoCopiado.extension }}</p>
+      <p><strong>Fecha de Modificación:</strong> {{ objetoCopiado.fechamod | date:'short' }}</p>
+      <p><strong>Usuario que lo creó:</strong> {{ getNameUser() }}</p>
     </div>
   </div>
 </div>
