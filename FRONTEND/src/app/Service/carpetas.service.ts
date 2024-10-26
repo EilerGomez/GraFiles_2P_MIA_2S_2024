@@ -13,9 +13,22 @@ export class CarpetasService {
     return this.http.get<Carpeta>(`${this.Url}/carpeta-raiz`);
   }
 
+  getCarpetaCompartida(){
+    return this.http.get<Carpeta>(`${this.Url}/carpeta-compartida`);
+  }
+
   getCarpetasDeCarpeta(idU:string, idC:string){
     return this.http.get<Carpeta[]>(`${this.Url}/${idU}/${idC}`);
   }
+
+  getCarpetasDeCarpetaEliminadas(idU:string, idC:string){
+    return this.http.get<Carpeta[]>(`${this.Url}/eliminadas/${idU}/${idC}`);
+  }
+
+  getCarpetasEliminadas(){
+    return this.http.get<Carpeta[]>(`${this.Url}/eliminadas`);
+  }
+
 
   postCarpeta(nombre: string, idU: string, ficheroMadre: string) {
     const body = { nombre, idU, ficheroMadre };
@@ -27,6 +40,10 @@ export class CarpetasService {
 
   deleteCarpeta(idC:string) {
     return this.http.delete(`${this.Url}/${idC}`);
+  }
+
+  eliminarDelSistema(idC:string) {
+    return this.http.delete(`${this.Url}/eliminar-sistema/${idC}`);
   }
 
   postCopiarCarpeta(nombre: string, idU: string, ficheroMadre: string, idFM:string) {

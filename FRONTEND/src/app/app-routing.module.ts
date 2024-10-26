@@ -7,6 +7,8 @@ import { UsuariosComponent } from './area-admin/usuarios/usuarios.component';
 import { AgregarusuarioComponent } from './area-admin/agregarusuario/agregarusuario.component';
 import { CambioPasswordComponent } from './cambio-password/cambio-password.component';
 import { CarpetaComponent } from './carpeta/carpeta.component';
+import { CompartidaComponent } from './compartida/compartida.component';
+import { PapeleraComponent } from './papelera/papelera.component';
 
 const routes: Routes = [
 
@@ -18,7 +20,9 @@ const routes: Routes = [
       path:'usuarios',component:UsuariosComponent},
       {path:'nuevoUsuario', component:AgregarusuarioComponent},
       {path:'cambioPassword',component:CambioPasswordComponent},
-      {path:'carpetas', component:CarpetaComponent}
+      {path:'carpetas', component:CarpetaComponent},
+      {path:'compartida', component:CompartidaComponent},
+      {path:'papelera', component:PapeleraComponent}
     ]
   }
 ];

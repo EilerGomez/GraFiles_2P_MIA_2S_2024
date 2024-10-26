@@ -1,0 +1,73 @@
+.menu-contextual {
+    position: absolute;
+    background-color: #343a40; /* Color de fondo negro */
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px; /* Espaciado interno aumentado */
+    z-index: 10000; /* Asegúrate de que esto sea lo suficientemente alto */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+    width: 200px; /* Aumentar el ancho del menú */
+  }
+  
+  .menu-contextual button {
+    width: 100%;
+    text-align: left;
+    color: #ffffff; /* Color de texto blanco */
+    background-color: transparent; /* Fondo transparente para los botones */
+    border: none; /* Sin borde */
+    padding: 8px 0; /* Espaciado interno */
+  }
+  
+  .menu-contextual button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el mouse */
+  }
+  
+  .position-relative {
+    position: relative;
+  }
+
+
+  .modal {
+    display: block;
+    /* Mostrar modal */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Ancho completo */
+    height: 100%;
+    /* Alto completo */
+    overflow: auto;
+    /* Habilitar desplazamiento si es necesario */
+    background-color: rgb(0, 0, 0);
+    /* Color de fondo */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Fondo negro con opacidad */
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    /* 15% desde arriba y centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    /* Puede ajustar el ancho */
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  

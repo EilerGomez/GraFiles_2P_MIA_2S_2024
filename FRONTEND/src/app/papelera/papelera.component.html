@@ -1,0 +1,100 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+
+
+<div (contextmenu)="onRightClick($event,null,0)">
+  <app-breadcrumb [breadcrumb]="breadcrumb" (navigate)="navigateTo($event)">
+  </app-breadcrumb>
+</div>
+
+
+<!-- Muestra las carpetas -->
+<div class="area-principal" (contextmenu)="onRightClick($event,null,0)"> <!-- Agregar el evento contextmenu aquí -->
+  <div class="d-flex flex-wrap">
+    <div *ngFor="let folder of carpetas; let i = index" class="text-center mx-3 my-2 position-relative"
+      (contextmenu)="onRightClick($event, folder,1)"> <!-- Agrega el evento contextmenu aquí -->
+      <button class="btn btn-link position-relative" (click)="navegarACarpeta(folder)">
+        <i class="bi bi-folder-fill" style="font-size: 4rem; color: #ff851be7;"></i>
+        <i class="bi bi-file-text-fill position-absolute"
+          style="font-size: 2rem; top: 10px; left: 15px; color: white;"></i>
+      </button>
+      <div>{{ folder.nombre }}</div> <!-- Nombre de la carpeta debajo del ícono -->
+    </div>
+    <div *ngFor="let archivo of archivos; let j = index" class="text-center mx-3 my-2 position-relative"
+      (contextmenu)="onRightClick($event, archivo,2)">
+      <button class="btn btn-link position-relative" (click)="mostrarArchivo(archivo)">
+        <i [ngClass]="getFileIconClass(archivo.extension)" style="font-size: 4rem; color: #007bff;"></i>
+      </button>
+      <div>{{ archivo.nombre }}{{ archivo.extension }}</div>
+    </div>
+  </div>
+</div>
+<!-- Muestra los archivos 
+<div class="area-principal" (contextmenu)="onRightClick($event, null, 0)">
+  <div class="d-flex flex-wrap">
+    <div *ngFor="let archivo of archivos; let j = index" class="text-center mx-3 my-2">
+      <button class="btn btn-link">
+        <i [ngClass]="getFileIconClass(archivo.extension)" style="font-size: 3rem; color: #007bff;"></i>
+      </button>
+      <div>{{ archivo.nombre }}{{ archivo.extension }}</div>
+    </div>
+  </div>
+</div>-->
+
+<!-- Menú contextual -->
+<div *ngIf="mostrarmenu" class="menu-contextual" [ngStyle]="{'top': menuTop + 'px', 'left': menuLeft + 'px'}">
+
+  <button class="btn btn-sm btn-danger d-block my-1" (click)="eliminarCarpeta()">
+    <i class="bi bi-trash"></i> Mover a la papelera
+  </button>
+  <button class="btn btn-sm btn-primary d-block my-1" (click)="verPropiedades()">
+    <i class="bi bi-info-circle"></i> Propiedades
+  </button>
+</div>
+
+
+<!-- Modal para mostrar la imagen -->
+<div *ngIf="selectedImage" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cerrarModal()">&times;</span>
+    <img [src]="selectedImage" alt="Imagen" />
+  </div>
+</div>
+
+<div *ngIf="modalArchivos" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cerrarModal()">&times;</span>
+    <div *ngIf="selectedExtension === '.txt'">
+      <h2>Contenido del Archivo TXT</h2>
+      <pre>{{ modalArchivos }}</pre>
+    </div>
+    <div *ngIf="selectedExtension === '.html'">
+      <h2>Contenido del Archivo HTML</h2>
+      <div [innerHTML]="modalArchivos"></div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="modalDetalles" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cerrarModal()">&times;</span>
+
+    <div *ngIf="isCarpeta">
+      <h2>Detalles de la Carpeta</h2>
+      <p><strong>Nombre:</strong> {{ carpetaEdit.nombre }}</p>
+      <p><strong>Fecha de Modificación:</strong> {{ carpetaEdit.fechamod | date:'short' }}</p>
+      <p><strong>Usuario que la creó:</strong> {{ getNameUser() }}</p>
+    </div>
+
+    <div *ngIf="!isCarpeta">
+      <h2>Detalles del Archivo</h2>
+      <p><strong>Nombre:</strong> {{ objetoCopiado.nombre }}</p>
+      <p><strong>Extensión:</strong> {{ objetoCopiado.extension }}</p>
+      <p><strong>Fecha de Modificación:</strong> {{ objetoCopiado.fechamod | date:'short' }}</p>
+      <p><strong>Usuario que lo creó:</strong> {{ getNameUser() }}</p>
+    </div>
+  </div>
+</div>
+
+
+

@@ -97,7 +97,7 @@
   <button class="btn btn-sm btn-primary d-block my-1" (click)="verPropiedades()">
     <i class="bi bi-info-circle"></i> Propiedades
   </button>
-  <button *ngIf="!isCarpeta" class="btn btn-sm btn-success d-block my-1" (click)="compartirArchivo()">
+  <button *ngIf="!isCarpeta" class="btn btn-sm btn-success d-block my-1" (click)="mostrarModalCompartir()">
     <i class="bi bi-share"></i> Compartir archivo
   </button>
 </div>
@@ -174,6 +174,91 @@
       <p><strong>Extensión:</strong> {{ objetoCopiado.extension }}</p>
       <p><strong>Fecha de Modificación:</strong> {{ objetoCopiado.fechamod | date:'short' }}</p>
       <p><strong>Usuario que lo creó:</strong> {{ getNameUser() }}</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal para editar archivo -->
+<div *ngIf="editArchivoModal" class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': editArchivoModal}"
+    [ngStyle]="{'display': editArchivoModal ? 'block' : 'none'}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Archivo</h5>
+                <button type="button" class="close" (click)="cerrarModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="actualizarArchivo()">
+                    <div class="form-group">
+                        <label for="fileName">Nombre del Archivo:</label>
+                        <input type="text" id="fileName" [(ngModel)]="objetoCopiado.nombre" name="fileName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileExtension">Extensión:</label>
+                        <select id="fileExtension" [(ngModel)]="objetoCopiado.extension" name="fileExtension" class="form-control" required>
+                            <option value=".txt">.txt</option>
+                            <option value=".html">.html</option>
+                            <option value=".png">.png</option>
+                            <option value=".jpg">.jpg</option>
+                        </select>
+                    </div>
+                    <div class="form-group" *ngIf="objetoCopiado.extension === '.txt' || objetoCopiado.extension === '.html'">
+                        <label for="fileContent">Contenido:</label>
+                        <textarea id="fileContent" [(ngModel)]="objetoCopiado.contenido" name="fileContent" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group" *ngIf="objetoCopiado.extension === '.png' || objetoCopiado.extension === '.jpg'">
+                        <label for="fileUpload">Subir Archivo:</label>
+                        <input type="file" id="fileUpload" (change)="onFileSelected($event)" name="fileUpload" [accept]="objetoCopiado.extension" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Actualizar Archivo</button>
+                        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para compartir archivo -->
+
+<div *ngIf="mostrarmodalCompartirArchivo" class="modal" tabindex="-1" [ngClass]="{ 'show d-block': mostrarmodalCompartirArchivo }" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Compartir Archivo</h5>
+        <button type="button" class="close" (click)="cerrarModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar usuarios..."
+          [(ngModel)]="busqueda"
+          (input)="filtrarUsuarios()"
+        />
+        <ul class="list-group mt-2">
+          <li
+            *ngFor="let usuario of usuariosFiltrados"
+            class="list-group-item d-flex justify-content-between align-items-center"
+            (click)="seleccionarUsuario(usuario)"
+          >
+            <i class="fas fa-user mr-2"></i> <!-- Ícono de usuario -->
+            <span>{{ usuario.nombre }} ({{ usuario.username }})</span>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button  type="button" class="btn btn-primary" (click)="compartirArchivo()" [disabled]="!usuarioSeleccionado">
+          Compartir Archivo
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+      </div>
     </div>
   </div>
 </div>

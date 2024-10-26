@@ -18,6 +18,8 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { CarpetaComponent } from './carpeta/carpeta.component';
 import { CarpetasService } from './Service/carpetas.service';
 import { ArchivosService } from './Service/archivos.service';
+import { CompartidaComponent } from './compartida/compartida.component';
+import { PapeleraComponent } from './papelera/papelera.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +31,9 @@ import { ArchivosService } from './Service/archivos.service';
     AgregarusuarioComponent,
     CambioPasswordComponent,
     BreadcrumbComponent,
-    CarpetaComponent    
+    CarpetaComponent,
+    CompartidaComponent,
+    PapeleraComponent    
   ],
   imports: [
     BrowserModule,

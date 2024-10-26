@@ -10,12 +10,20 @@ export class ArchivosService {
 
   constructor(private http: HttpClient) { }
   Url = 'http://localhost:3010/archivos';
-  getArchivos(idFM:string){
-    return this.http.get<Archivos[]>(`${this.Url}/${idFM}`);
+  getArchivos(idFM:string, idU:string){
+    return this.http.get<Archivos[]>(`${this.Url}/${idFM}/${idU}`);
   }
 
-  postArchivo(nombre:string, extension:string, contenido:string, idFM:string){
-    const body = { extension, nombre, contenido, idFM };
+  getArchivosEliminados(idC:string){
+    return this.http.get<Archivos[]>(`${this.Url}/eliminados/${idC}`);
+  }
+
+  getArchivosCompartidos(idFM:string, idU:string){
+    return this.http.get<Archivos[]>(`${this.Url}/archivos-compartidos/${idFM}/${idU}`);
+  }
+
+  postArchivo(nombre:string, extension:string, contenido:string, idFM:string, idU:string){
+    const body = { extension, nombre, contenido, idFM , idU};
     console.log(body)
     return this.http.post(`${this.Url}`, (body));
   }
@@ -36,7 +44,25 @@ export class ArchivosService {
   deleteArchivo(id:string) {
     return this.http.delete(`${this.Url}/${id}`);
   }
+  eliminarDelSistema(id:string) {
+    return this.http.delete(`${this.Url}/eliminar-del-sistema/${id}`);
+  }
   putMoverArchivo(idA:string, nombre:string, idFM:string, extension:string) {
     return this.http.put<any>(`${this.Url}/mover/${idA}`, {idFM, nombre, extension});
+  }
+
+  putEditarArchivo(extension:string, nombre:string, contenido:string, idArchivo:string, idFM:string){
+    const body = {extension, nombre, contenido, idArchivo, idFM};
+    return this.http.put<any>(`${this.Url}/editar`, (body));
+  }
+
+  actualizarArchivoImagen(formData: FormData): Observable<any> {
+    return this.http.put(`${this.Url}/editararchivoimagen`, formData);
+  }
+
+  postCompartirArchivo(idFM:string, idU:string, idUC:string,idA:string){
+    const body = { idFM, idU, idUC,idA};
+    console.log(body)
+    return this.http.post(`${this.Url}/compartir`, (body));
   }
 }

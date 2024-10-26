@@ -125,7 +125,7 @@ function carpetasRouter(client) {
     // OBTENER LA CARPETA COMPARTIDA
     router.get('/carpeta-compartida', async (req, res) => {
         try {
-            const carpeta = await collection.find({ idUnic: 1 });
+            const carpeta = await collection.findOne({ idUnic: 1 });
             res.status(200).json(carpeta);
         } catch (err) {
             res.status(500).send('Error al obtener la carpeta compartida: ' + err.message);
@@ -186,15 +186,15 @@ function carpetasRouter(client) {
             let nuevoNombre = nombre;
             let contador = 1;
             let carpetaAnt = await collection.findOne({ nombre: nuevoNombre, id_fichero_madre: nuevoFicheroMadre, eliminada: false });
-            const carpOriginal = await collection.findOne({_id: new ObjectId(id) });
-            if(carpOriginal.id_fichero_madre!==nuevoFicheroMadre){
+            const carpOriginal = await collection.findOne({ _id: new ObjectId(id) });
+            if (carpOriginal.id_fichero_madre !== nuevoFicheroMadre) {
                 while (carpetaAnt) {
                     nuevoNombre = `${nombre}_${contador}`;
                     contador++;
                     carpetaAnt = await collection.findOne({ nombre: nuevoNombre, id_fichero_madre: nuevoFicheroMadre, eliminada: false });
                 }
             }
-            
+
 
             // Actualizar el fichero madre y el nombre de la carpeta
             const result = await collection.updateOne(
@@ -243,8 +243,55 @@ function carpetasRouter(client) {
         }
     });
 
+    // OBTENER CARPETAS O FICHEROS DE una carpeta ELIMINADA
+    router.get('/eliminadas/:idU/:idC', async (req, res) => {
+        const { idC } = req.params;
+        try {
+            const carpetas = await collection.find({ id_fichero_madre: idC, eliminada: true }).sort({ nombre: 1 }).toArray();
+            res.status(200).json(carpetas);
+        } catch (err) {
+            res.status(500).send('Error al obtener el carpetas: ' + err.message);
+        }
+    });
 
+    // OBTENER CARPETAS ELIMINADAS
+    router.get('/eliminadas', async (req, res) => {
+        try {
+            const carpetas = await collection.find({ eliminada: true }).sort({ nombre: 1 }).toArray();
+            res.status(200).json(carpetas);
+        } catch (err) {
+            res.status(500).send('Error al obtener el carpetas: ' + err.message);
+        }
+    });
 
+    async function eliminarCarpetaCompletamenteDelSistemaRecursivamente(idCarpeta) {
+        // Marcar los archivos de la carpeta actual como eliminados
+        await collectionArchivos.deletemany({ id_fichero_madre: idCarpeta });
+
+        // Obtener las subcarpetas de la carpeta actual
+        const subcarpetas = await collection.find({ id_fichero_madre: idCarpeta}).toArray();
+
+        // Recorrer las subcarpetas y eliminarlas recursivamente
+        for (const subcarpeta of subcarpetas) {
+            await eliminarCarpetaRecursivamente(subcarpeta._id.toString());
+        }
+
+        // Marcar la carpeta actual como eliminada
+        await collection.deleteOne({ _id: new ObjectId(idCarpeta)});
+    }
+
+    router.delete('/eliminar-sistema/:id', async (req, res) => {
+        const { id } = req.params;
+
+        try {
+            // Iniciar la eliminación recursiva desde la carpeta especificada
+            await eliminarCarpetaCompletamenteDelSistemaRecursivamente(id);
+
+            res.status(200).json({ message: 'Carpeta y sus contenidos movidos a la papelera', id });
+        } catch (err) {
+            res.status(500).send('Error al eliminar la carpeta y archivos: ' + err.message);
+        }
+    });
 
     return router;
 

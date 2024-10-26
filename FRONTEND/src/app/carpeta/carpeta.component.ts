@@ -5,6 +5,7 @@ import { Usuario } from '../Modelo/Usuario';
 import { data, error } from 'jquery';
 import { Archivos } from '../Modelo/Archivos';
 import { ArchivosService } from '../Service/archivos.service';
+import { UsuariosService } from '../Service/usuarios.service';
 @Component({
   selector: 'app-carpeta',
   template: `
@@ -25,13 +26,14 @@ export class CarpetaComponent {
   isCarpeta!: boolean // si es true es carpeta si es false es archivo
   objetoCopiado: any
   formType: 'carpeta' | 'archivo' | null = null; // Tipo de formulario a mostrar
-  constructor(private servicioCarpetas: CarpetasService, private servicioArchivos: ArchivosService) { }
+  constructor(private servicioCarpetas: CarpetasService, private servicioArchivos: ArchivosService, private servicioUsuarios:UsuariosService) { }
   idCarpetaActual: string = '0';//es la carpeta raiz
   carpetas: Carpeta[] = [];
   archivos: Archivos[] = [];
   breadcrumb: { id: string, nombre: string }[] = [];
   ngOnInit(): void {
     this.traerCarpetaRaiz();
+    this.traerCarpetaCompartida();
   }
 
   traerCarpetaRaiz() {
@@ -39,6 +41,13 @@ export class CarpetaComponent {
       console.log(data);
       this.idCarpetaActual = data._id;
       this.traerCarpetasDeUnaCarpeta(this.idCarpetaActual);
+    })
+  }
+
+  traerCarpetaCompartida() {
+    this.servicioCarpetas.getCarpetaCompartida().subscribe(data => {
+      console.log(data)
+      this.carpetaCompartida = data;
     })
   }
 
@@ -52,7 +61,7 @@ export class CarpetaComponent {
   }
 
   traerArchivosDeUnaCarpeta(idC: string) {
-    this.servicioArchivos.getArchivos(idC).subscribe(data => {
+    this.servicioArchivos.getArchivos(idC, this.getIDUser()).subscribe(data => {
       this.archivos = data
     }, error => { console.log(error) })
   }
@@ -155,7 +164,7 @@ export class CarpetaComponent {
     if (this.nuevaExtension === '.png' || this.nuevaExtension === '.png') {
       this.subirArchivo();
     } else {
-      this.servicioArchivos.postArchivo(this.nuevoArchivoNombre, this.nuevaExtension, this.nuevoContenido, this.idCarpetaActual).subscribe(data => {
+      this.servicioArchivos.postArchivo(this.nuevoArchivoNombre, this.nuevaExtension, this.nuevoContenido, this.idCarpetaActual,this.getIDUser()).subscribe(data => {
         this.traerArchivosDeUnaCarpeta(this.idCarpetaActual);
         this.toggleForm();
       }, error => {
@@ -178,18 +187,29 @@ export class CarpetaComponent {
 
   // Métodos para las acciones del menú
   abrirModal() {
-    this.nuevoNombre = this.carpetaEdit.nombre
-    this.mostrarModal = true; // Muestra el modal
-    this.mostrarmenu = false;
+    if (this.isCarpeta) {
+      this.nuevoNombre = this.carpetaEdit.nombre
+      this.mostrarModal = true; // Muestra el modal
+      this.mostrarmenu = false;
+    } else {
+      this.editArchivoModal = true
+      this.mostrarmenu = false
+    }
+
   }
 
   cerrarModal() {
     this.mostrarModal = false; // Oculta el modal
     this.nuevoNombre = ''; // Limpia el campo de texto
-    this.selectedImage=''
-    this.modalArchivos=''
-    this.selectedExtension=''
-    this.modalDetalles=false
+    this.selectedImage = ''
+    this.modalArchivos = ''
+    this.selectedExtension = ''
+    this.modalDetalles = false
+    this.editArchivoModal = false;
+    this.mostrarmodalCompartirArchivo = false;
+    this.busqueda = '';
+    this.usuariosFiltrados = [];
+    this.usuarioSeleccionado = null;
   }
   actualizarNombre() {
     this.servicioCarpetas.putNombreCarpeta(this.carpetaEdit._id, this.nuevoNombre, this.idCarpetaActual).subscribe(data => {
@@ -211,10 +231,10 @@ export class CarpetaComponent {
         })
       }
     } else {
-      if (confirm("Eliminar el archivo: " + this.objetoCopiado.nombre + this.objetoCopiado.extension+" ?")) {
+      if (confirm("Eliminar el archivo: " + this.objetoCopiado.nombre + this.objetoCopiado.extension + " ?")) {
         this.servicioArchivos.deleteArchivo(this.objetoCopiado._id).subscribe(data => {
           this.traerArchivosDeUnaCarpeta(this.idCarpetaActual)
-        }, error=>{console.log(error)})
+        }, error => { console.log(error) })
       }
     }
 
@@ -234,12 +254,12 @@ export class CarpetaComponent {
         this.traerCarpetasDeUnaCarpeta(this.idCarpetaActual)
       }, error => { console.log(error) })
     } else {
-      this.servicioArchivos.putMoverArchivo(this.objetoCopiado._id,this.objetoCopiado.nombre,this.idCarpetaActual,this.objetoCopiado.extension).subscribe(data=>{
+      this.servicioArchivos.putMoverArchivo(this.objetoCopiado._id, this.objetoCopiado.nombre, this.idCarpetaActual, this.objetoCopiado.extension).subscribe(data => {
         this.traerArchivosDeUnaCarpeta(this.idCarpetaActual);
-      }, error=>{console.log(error)})
+      }, error => { console.log(error) })
     }
 
-    this.permisoMover_Copiar=false
+    this.permisoMover_Copiar = false
   }
   pegarCarpeta() {
     if (this.isCarpeta === true) {
@@ -247,20 +267,18 @@ export class CarpetaComponent {
         this.traerCarpetasDeUnaCarpeta(this.idCarpetaActual);
       }, error => { console.log(error) })
     } else {
-      this.servicioArchivos.pegarArchivo(this.objetoCopiado._id,this.idCarpetaActual).subscribe(data=>{
+      this.servicioArchivos.pegarArchivo(this.objetoCopiado._id, this.idCarpetaActual).subscribe(data => {
         this.traerArchivosDeUnaCarpeta(this.idCarpetaActual);
-      }, error=>{console.log(error)})
+      }, error => { console.log(error) })
     }
-    this.permisoMover_Copiar=false
+    this.permisoMover_Copiar = false
   }
 
   verPropiedades() {
-    this.modalDetalles=true
+    this.modalDetalles = true
     this.mostrarmenu = false
   }
-  compartirArchivo() {
 
-  }
 
   mostrarMenu(carpeta: Carpeta, event: MouseEvent) {
     this.carpetaEdit = carpeta
@@ -322,6 +340,7 @@ export class CarpetaComponent {
       const formData = new FormData();
       formData.append('imagen', this.selectedFile, this.selectedFile.name);
       formData.append('idFM', this.idCarpetaActual);
+      formData.append('idU', this.getIDUser());
       formData.append('nombreArchivo', this.nuevoArchivoNombre);
       formData.append('extensionArchivo', this.nuevaExtension);
       this.servicioArchivos.subirArchivo(formData).subscribe(
@@ -337,21 +356,89 @@ export class CarpetaComponent {
     }
   }
 
-  
+
 
   mostrarArchivo(archivo: Archivos) {
-    if(archivo.extension==='.html' || archivo.extension==='.txt'){
-      this.modalArchivos=archivo.contenido;
-      this.selectedExtension=archivo.extension
-    }else{
+    if (archivo.extension === '.html' || archivo.extension === '.txt') {
+      this.modalArchivos = archivo.contenido;
+      this.selectedExtension = archivo.extension
+    } else {
       this.selectedImage = `http://localhost:3010/archivos/imagen/${archivo.contenido}`; // Asegúrate de que esto apunte correctamente a tu servidor
     }
   }
 
 
-  modalArchivos:string='';
-  selectedExtension:string=''
-  modalDetalles:boolean=false
+  modalArchivos: string = '';
+  selectedExtension: string = ''
+  modalDetalles: boolean = false
+
+  editArchivoModal: boolean = false;
+
+  actualizarArchivo() {
+    this.editArchivoModal = false
+    if (this.objetoCopiado.extension === '.png' || this.objetoCopiado.extension === '.png') {
+      const formData = new FormData();
+      if (this.selectedFile) {
+        formData.append('imagen', this.selectedFile, this.selectedFile.name);
+      }
+      formData.append('extension', this.objetoCopiado.extension);
+      formData.append('nombre', this.objetoCopiado.nombre);
+      formData.append('idArchivo', this.objetoCopiado._id);
+      console.log(formData)
+      this.servicioArchivos.actualizarArchivoImagen(formData).subscribe(data => {
+        this.traerArchivosDeUnaCarpeta(this.idCarpetaActual)
+        alert("Archivo actualizado correctamente")
+        this.selectedFile = null
+      }, error => { console.log(error); this.traerArchivosDeUnaCarpeta(this.idCarpetaActual) })
+    } else {
+      this.servicioArchivos.putEditarArchivo(this.objetoCopiado.extension, this.objetoCopiado.nombre, this.objetoCopiado.contenido, this.objetoCopiado._id, this.idCarpetaActual).subscribe(data => {
+        this.traerArchivosDeUnaCarpeta(this.idCarpetaActual);
+        alert("Archivo actualizado correctamente")
+      }, error => {
+        console.log(error)
+      })
+    }
+  }
+
+  carpetaCompartida!: Carpeta
 
 
+  // para compartir un archivo
+  mostrarmodalCompartirArchivo = false;
+  usuarios: Usuario[] = []
+  usuariosFiltrados:Usuario[]= [];
+  busqueda = '';
+  usuarioSeleccionado: any = null;
+  // Filtra los usuarios por nombre o username
+  filtrarUsuarios(): void {
+    const termino = this.busqueda.toLowerCase();
+    this.usuariosFiltrados = this.usuarios.filter(
+      (usuario) =>
+        usuario.nombre.toLowerCase().includes(termino) ||
+        usuario.username.toLowerCase().includes(termino)
+    );
+  }
+
+  // Selecciona un usuario de la lista
+  seleccionarUsuario(usuario: any): void {
+    this.usuarioSeleccionado = usuario;
+  }
+  // Método para compartir el archivo
+  compartirArchivo(): void {
+    console.log(this.carpetaCompartida)
+    if (this.usuarioSeleccionado) {
+      this.servicioArchivos.postCompartirArchivo(this.carpetaCompartida._id,this.usuarioSeleccionado._id,this.getNameUser(),this.objetoCopiado._id
+    ).subscribe(data=>{
+      alert("Archivo compartido correctamente")
+    }, error=>{console.log(error)})
+      this.cerrarModal(); // Cierra el modal después de compartir
+    }
+  }
+  mostrarModalCompartir(){
+    this.mostrarmenu=false
+    this.mostrarmodalCompartirArchivo=true
+    this.servicioUsuarios.getUsuarios().subscribe(data=>{
+      this.usuarios=data;
+    })
+  }
 }
