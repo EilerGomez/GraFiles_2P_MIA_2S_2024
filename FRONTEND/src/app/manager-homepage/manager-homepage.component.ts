@@ -20,11 +20,7 @@ export class ManagerHomepageComponent implements OnInit {
       if (area == "1") {
         this.router.navigate(["areaAdministrador"])
       } else if (area == "2") {
-        this.router.navigate(["areaInventario"])
-      } else if (area == "3") {
-        this.router.navigate(["areaBodega"])
-      } else if (area == "4") {
-          this.router.navigate(["areaCajero"])
+        this.router.navigate(["areaEmpleado"])
       }
     }
     else {

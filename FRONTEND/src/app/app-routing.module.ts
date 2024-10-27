@@ -9,6 +9,7 @@ import { CambioPasswordComponent } from './cambio-password/cambio-password.compo
 import { CarpetaComponent } from './carpeta/carpeta.component';
 import { CompartidaComponent } from './compartida/compartida.component';
 import { PapeleraComponent } from './papelera/papelera.component';
+import { AreaEmpleadoComponent } from './area-empleado/area-empleado.component';
 
 const routes: Routes = [
 
@@ -23,6 +24,13 @@ const routes: Routes = [
       {path:'carpetas', component:CarpetaComponent},
       {path:'compartida', component:CompartidaComponent},
       {path:'papelera', component:PapeleraComponent}
+    ]
+  },
+  {path:'areaEmpleado',component:AreaEmpleadoComponent,
+    children:[
+      {path:'carpetas', component:CarpetaComponent},
+      {path:'compartida', component:CompartidaComponent},
+      {path:'cambioPassword',component:CambioPasswordComponent}
     ]
   }
 ];

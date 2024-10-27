@@ -20,6 +20,7 @@ import { CarpetasService } from './Service/carpetas.service';
 import { ArchivosService } from './Service/archivos.service';
 import { CompartidaComponent } from './compartida/compartida.component';
 import { PapeleraComponent } from './papelera/papelera.component';
+import { AreaEmpleadoComponent } from './area-empleado/area-empleado.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,8 @@ import { PapeleraComponent } from './papelera/papelera.component';
     BreadcrumbComponent,
     CarpetaComponent,
     CompartidaComponent,
-    PapeleraComponent    
+    PapeleraComponent,
+    AreaEmpleadoComponent    
   ],
   imports: [
     BrowserModule,

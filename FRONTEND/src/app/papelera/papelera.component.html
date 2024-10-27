@@ -45,7 +45,7 @@
 <div *ngIf="mostrarmenu" class="menu-contextual" [ngStyle]="{'top': menuTop + 'px', 'left': menuLeft + 'px'}">
 
   <button class="btn btn-sm btn-danger d-block my-1" (click)="eliminarCarpeta()">
-    <i class="bi bi-trash"></i> Mover a la papelera
+    <i class="bi bi-trash"></i> Eliminar
   </button>
   <button class="btn btn-sm btn-primary d-block my-1" (click)="verPropiedades()">
     <i class="bi bi-info-circle"></i> Propiedades
@@ -91,7 +91,6 @@
       <p><strong>Nombre:</strong> {{ objetoCopiado.nombre }}</p>
       <p><strong>Extensión:</strong> {{ objetoCopiado.extension }}</p>
       <p><strong>Fecha de Modificación:</strong> {{ objetoCopiado.fechamod | date:'short' }}</p>
-      <p><strong>Usuario que lo creó:</strong> {{ getNameUser() }}</p>
     </div>
   </div>
 </div>

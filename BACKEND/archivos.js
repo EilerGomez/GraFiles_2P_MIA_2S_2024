@@ -169,10 +169,10 @@ function archivosRouter(client) {
     });
 
     // OBTENER TODOS LOS ARCHIVOS ELIMINADOS
-    router.get('/eliminados/:idC', async (req, res) => {
+    router.get('/:idC', async (req, res) => {
         const { idC } = req.params;
         
-            console.log(""+idC);
+            console.log("hhhhhhhh"+idC);
         
         try {
             const archivos = await collection.find({ id_fichero_madre: idC, eliminado: true }).sort({ nombre: 1 }).toArray();

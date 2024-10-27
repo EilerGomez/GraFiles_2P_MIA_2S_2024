@@ -31,14 +31,14 @@ export class PapeleraComponent {
   getFileIconClass(extension: string): string {
     switch (extension) {
       case '.html':
-        return 'bi bi-file-earmark-code-fill'; // Ícono para archivos HTML
+        return 'bi bi-file-earmark-code-fill text-primary'; // Azul para archivos HTML
       case '.txt':
-        return 'bi bi-file-earmark-text-fill'; // Ícono para archivos TXT
+        return 'bi bi-file-earmark-text-fill text-success'; // Verde para archivos TXT
       case '.jpg':
       case '.png':
-        return 'bi bi-file-earmark-image-fill'; // Ícono para archivos de imagen
+        return 'bi bi-file-earmark-image-fill text-warning'; // Amarillo para archivos de imagen
       default:
-        return 'bi bi-file-earmark'; // Ícono genérico para otros archivos
+        return 'bi bi-file-earmark text-secondary'; // Gris para otros archivos
     }
   }
   traerCarpetaRaiz() {

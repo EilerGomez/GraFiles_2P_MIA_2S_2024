@@ -57,14 +57,14 @@ export class CompartidaComponent {
   getFileIconClass(extension: string): string {
     switch (extension) {
       case '.html':
-        return 'bi bi-file-earmark-code-fill'; // Ícono para archivos HTML
+        return 'bi bi-file-earmark-code-fill text-primary'; // Azul para archivos HTML
       case '.txt':
-        return 'bi bi-file-earmark-text-fill'; // Ícono para archivos TXT
+        return 'bi bi-file-earmark-text-fill text-success'; // Verde para archivos TXT
       case '.jpg':
       case '.png':
-        return 'bi bi-file-earmark-image-fill'; // Ícono para archivos de imagen
+        return 'bi bi-file-earmark-image-fill text-warning'; // Amarillo para archivos de imagen
       default:
-        return 'bi bi-file-earmark'; // Ícono genérico para otros archivos
+        return 'bi bi-file-earmark text-secondary'; // Gris para otros archivos
     }
   }
   eliminarCarpeta(){
@@ -99,6 +99,17 @@ export class CompartidaComponent {
     let usuario: Usuario = stringUser ? JSON.parse(stringUser) : null;
     let name = usuario ? usuario.nombre : '0';
     return name;
+  }
+
+  @HostListener('document:click', ['$event'])
+  cerrarMenu(event: MouseEvent) {
+    const targetElement = event.target as HTMLElement;
+
+    const clickedInsideMenu = targetElement.closest('.menu-contextual') !== null;
+
+    if (!clickedInsideMenu) {
+      this.mostrarmenu = false; // Oculta el menú
+    }
   }
   @HostListener('contextmenu', ['$event'])
   onRightClick(event: MouseEvent, folder: (any | null), isfolder: number) { // 0 no es nada, 1 es carpeta 2 es archivo

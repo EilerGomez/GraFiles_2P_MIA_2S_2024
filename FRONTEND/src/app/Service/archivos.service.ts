@@ -15,7 +15,7 @@ export class ArchivosService {
   }
 
   getArchivosEliminados(idC:string){
-    return this.http.get<Archivos[]>(`${this.Url}/eliminados/${idC}`);
+    return this.http.get<Archivos[]>(`${this.Url}/${idC}`);
   }
 
   getArchivosCompartidos(idFM:string, idU:string){

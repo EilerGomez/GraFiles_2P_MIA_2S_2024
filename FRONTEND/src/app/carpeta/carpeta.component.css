@@ -25,6 +25,9 @@
   .position-relative {
     position: relative;
   }
+  .modal-dialog {
+    max-width: 90%; /* Aumentar el ancho máximo del modal */
+  }
 
 
   .modal {
@@ -69,5 +72,10 @@
     text-decoration: none;
     cursor: pointer;
   }
+
+  .text-brown {
+    color: #8B4513; /* Marrón amigable */
+  }
+  
 
   

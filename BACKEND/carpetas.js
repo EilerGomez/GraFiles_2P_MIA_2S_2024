@@ -266,7 +266,7 @@ function carpetasRouter(client) {
 
     async function eliminarCarpetaCompletamenteDelSistemaRecursivamente(idCarpeta) {
         // Marcar los archivos de la carpeta actual como eliminados
-        await collectionArchivos.deletemany({ id_fichero_madre: idCarpeta });
+        await collectionArchivos.deleteMany({ id_fichero_madre: idCarpeta });
 
         // Obtener las subcarpetas de la carpeta actual
         const subcarpetas = await collection.find({ id_fichero_madre: idCarpeta}).toArray();
