@@ -38,8 +38,9 @@ function archivosRouter(client) {
 
         try {
             const archant = await collection.findOne({ nombre, extension, id_fichero_madre: idFM,id_usuario:idU, eliminado: false });
+            
             if (archant) {
-                return res.status(400).send("No se permiten archivos con el mismo nombre en la misma carpeta");
+                return res.status(400).send("No se permiten archivos con el mismo nombre en la misma carpeta",{ nombre, extension, id_fichero_madre: idFM,id_usuario:idU, eliminado: false } );
             }
 
             const result = await collection.insertOne({

@@ -162,7 +162,7 @@ export class CarpetaComponent {
   }
 
   agregarArchivo() {
-    if (this.nuevaExtension === '.png' || this.nuevaExtension === '.png') {
+    if (this.nuevaExtension === '.png' || this.nuevaExtension === '.jpg') {
       this.subirArchivo();
     } else {
       this.servicioArchivos.postArchivo(this.nuevoArchivoNombre, this.nuevaExtension, this.nuevoContenido, this.idCarpetaActual,this.getIDUser()).subscribe(data => {
@@ -377,7 +377,7 @@ export class CarpetaComponent {
 
   actualizarArchivo() {
     this.editArchivoModal = false
-    if (this.objetoCopiado.extension === '.png' || this.objetoCopiado.extension === '.png') {
+    if (this.objetoCopiado.extension === '.png' || this.objetoCopiado.extension === '.jpg') {
       const formData = new FormData();
       if (this.selectedFile) {
         formData.append('imagen', this.selectedFile, this.selectedFile.name);

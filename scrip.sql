@@ -25,3 +25,7 @@ db.ficheros.insertOne({nombre: 'raiz', fechamod: new Date(),id_usuario:'0', idUn
 --  docker exec -it mongodb mongosh
 -- desplegar los contenedores del proyecto:
 -- docker-compose up --build o docker-compose
+
+-- reconstruir el contenedor con cambios realizados
+
+-- docker-compose up --build -d
