@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-const uri = 'mongodb://usuarioProyecto2MIA2024:up2mia@localhost:27018/sistemaarchivos?authSource=admin';
+const uri = 'mongodb://usuarioProyecto2MIA2024:up2mia@mongo:27017/sistemaarchivos?authSource=admin';
 const client = new MongoClient(uri);
 
 async function connect() {

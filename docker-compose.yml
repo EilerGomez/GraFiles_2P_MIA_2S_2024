@@ -1,0 +1,30 @@
+#version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./BACKEND  # Asegúrate de que esta ruta sea correcta
+      dockerfile: Dockerfile.dev  # Especifica el nombre del Dockerfile
+    ports:
+      - "3010:3010"  # Mapea el puerto 3010 del contenedor al puerto 3010 de tu máquina
+    environment:
+      - NODE_ENV=production  # Variables de entorno opcionales
+      - MONGO_URI=mongodb://usuarioProyecto2MIA2024:up2mia@host.docker.internal:27017/sistemaarchivos?authSource=admin  # Conexión a MongoDB desde el contenedor
+
+  frontend:
+    build:
+      context: ./FRONTEND  # Asegúrate de que esta ruta sea correcta
+      dockerfile: Dockerfile.dev  # Especifica el nombre del Dockerfile
+    ports:
+      - "4200:80"  # Mapea el puerto 80 del contenedor al puerto 4200 de tu máquina
+
+  mongo:
+    image: mongo:latest  # Usa la imagen más reciente de MongoDB
+    container_name: mongodb
+    ports:
+      - "27018:27017"  # Mapea el puerto 27018 del host al puerto 27017 del contenedor
+    volumes:
+      - mongo-data:/data/db  # Persistencia de datos
+
+volumes:
+  mongo-data:
