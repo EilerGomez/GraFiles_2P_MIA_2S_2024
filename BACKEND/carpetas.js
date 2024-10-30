@@ -15,7 +15,7 @@ function carpetasRouter(client) {
             return res.status(400).send('Todos los campos son obligatorios');
         }
         try {
-            const carpetaAnt = await collection.findOne({ nombre: nombre, id_fichero_madre: ficheroMadre, eliminada: false });
+            const carpetaAnt = await collection.findOne({ nombre: nombre, id_fichero_madre: ficheroMadre, eliminada: false, id_usuario:idU});
             if (carpetaAnt) {
                 return res.status(400).send("No se permiten nombres duplicados en un mismo directorio");
             }
@@ -62,20 +62,26 @@ function carpetasRouter(client) {
         });
 
         const nuevaCarpeta = nuevaCarpetaResult.insertedId.toString();
-
+        //console.log("cipiado carpeta: ", nuevoNombre);
+        //console.log("id nueva carpeta: ", nuevaCarpeta);
         // Copiar los archivos de la carpeta origen a la nueva carpeta
         const archivos = await collectionArchivos.find({ id_fichero_madre: idCarpetaOrigen, eliminado: false }).toArray();
+        //console.log("archivos encontrados: ", archivos);
+
         const nuevasCopiasArchivos = archivos.map(archivo => ({ // aqui aun falta logica para los archivos, no es la informacion de archivos oficial
             nombre: archivo.nombre,
             extension: archivo.extension,
             contenido: archivo.contenido,
             eliminado: archivo.eliminado,
             fechamod: new Date(),
-            id_fichero_madre: nuevaCarpeta
+            id_fichero_madre: nuevaCarpeta,
+            id_usuario:idU
         }));
-
+        //console.log("archivos copiados: ", nuevasCopiasArchivos);
         if (nuevasCopiasArchivos.length > 0) {
-            await collectionArchivos.insertMany(nuevasCopiasArchivos);
+            for(const archivo of nuevasCopiasArchivos){
+                await collectionArchivos.insertOne(archivo);
+            }
         }
 
         // Obtener las subcarpetas de la carpeta origen
@@ -245,7 +251,9 @@ function carpetasRouter(client) {
 
     // OBTENER CARPETAS O FICHEROS DE una carpeta ELIMINADA
     router.get('/eliminadas/:idU/:idC', async (req, res) => {
-        const { idC } = req.params;
+        const { idC, idU } = req.params;
+        console.log("trayendo carpetas eliminadas");
+
         try {
             const carpetas = await collection.find({ id_fichero_madre: idC, eliminada: true }).sort({ nombre: 1 }).toArray();
             res.status(200).json(carpetas);
@@ -273,7 +281,7 @@ function carpetasRouter(client) {
 
         // Recorrer las subcarpetas y eliminarlas recursivamente
         for (const subcarpeta of subcarpetas) {
-            await eliminarCarpetaRecursivamente(subcarpeta._id.toString());
+            await eliminarCarpetaCompletamenteDelSistemaRecursivamente(subcarpeta._id.toString());
         }
 
         // Marcar la carpeta actual como eliminada

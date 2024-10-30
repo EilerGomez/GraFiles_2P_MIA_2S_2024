@@ -25,9 +25,6 @@ export class CarpetasService {
     return this.http.get<Carpeta[]>(`${this.Url}/eliminadas/${idU}/${idC}`);
   }
 
-  getCarpetasEliminadas(){
-    return this.http.get<Carpeta[]>(`${this.Url}/eliminadas`);
-  }
 
 
   postCarpeta(nombre: string, idU: string, ficheroMadre: string) {
